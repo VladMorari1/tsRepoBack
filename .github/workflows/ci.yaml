@@ -21,7 +21,14 @@ jobs:
         run: docker build -t registry.digitalocean.com/registry.digitalocean.com/project-back-api/project-back-api:$(echo $GITHUB_SHA | head -c7) .
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 1200
+
+        run: echo "Logging into DigitalOcean Container Registry..." 
+             doctl registry login --expiry-seconds 1200
+
+      - name: Show current directory and content
+        run: |
+            echo "Current directory:"
+              ls -al
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/registry.digitalocean.com/project-back-api/project-back-api:$(echo $GITHUB_SHA | head -c7)
