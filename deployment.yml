@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nestjs-example
+  labels:
+    app: nestjs-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nestjs-example
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: nestjs-example
+    spec:
+      containers:
+        - name: nestjs-example
+          image: project-back-api # Replace <NESTJS_IMAGE> with the actual image name
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              cpu: 100m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nestjs-example-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: nestjs-example
